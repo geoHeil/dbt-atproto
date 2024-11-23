@@ -14,6 +14,9 @@ channels = ["conda-forge"]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
 [tool.pixi.environments]
 prod = { features = ["main"], solve-group = "atproto" }
 dev = { features = [

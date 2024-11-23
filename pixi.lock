@@ -1457,7 +1457,7 @@ packages:
   name: dbt-atproto
   version: 1.0.0
   path: .
-  sha256: 652309541d73601d2debe7b7298a4e000124a8a003497966c0640d8c3df96274
+  sha256: 63c4965a3d64ea1a1bd7333a94a61f9b8a7cf02729cc0acc66a12c2a87e2c1f2
   requires_python: ==3.12
   editable: true
 - kind: pypi
