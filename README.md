@@ -10,6 +10,10 @@ This is based on:
   - https://gist.github.com/lmangani/518215a68e674ac662537d518799b893
   - https://github.com/jakthom/hercules/blob/main/hercules-packages/bluesky/1.0.yaml
 
+## Example
+
+See the example project [here](https://github.com/geoHeil/dbt-atproto-example) as for how to use this package.
+
 ## Roadmap
 
 - refine release procedures

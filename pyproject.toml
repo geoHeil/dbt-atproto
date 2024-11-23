@@ -1,0 +1,125 @@
+[project]
+name = "dbt-atproto"
+version = "1.0.0"
+description = "ATmosphere protocol utility functions for dbt"
+authors = [{ name = "Georg Heiler", email = "dbt-atproto.tidiness350@passmail.net" }]
+requires-python = "== 3.12"
+url = "https://github.com/geoHeil/dbt-atproto"
+
+[tool.pixi.project]
+platforms = ["linux-64", "osx-arm64", "win-64", "linux-aarch64"]
+channels = ["conda-forge"]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.pixi.environments]
+prod = { features = ["main"], solve-group = "atproto" }
+dev = { features = [
+  "main",
+  "dev",
+], solve-group = "atproto" }
+[tool.pixi.feature.main.dependencies]
+[tool.pixi.feature.main.pypi-dependencies]
+dbt-common = ">=1,<2"
+dbt-adapters = ">=1,<2"
+duckdb = ">=1.0.0,<2"
+dbt-core = ">=1.8.0,<1.10"
+dbt-atproto = { path = ".", editable = true }
+
+[tool.pixi.feature.dev.dependencies]
+duckdb = "~=1.1.1"
+
+yamllint = ">=1.35.1,<2"
+taplo = ">=0.9.3,<0.10"
+pytest = ">=8.3.3,<9"
+pytest-mock = ">=3.14.0,<4"
+pytest-cov = "~=6.0.0"
+ruff = ">=0.8,<1"
+pyright = "~=1.1.383"
+
+[tool.pixi.feature.dev.pypi-dependencies]
+sqlfluff = "~=3.2.0"
+sqlfluff-templater-dbt = "~=3.2.0"
+
+dbt-duckdb = "~=1.8.4"
+
+dbt-tests-adapter = ">=1.10.4,<2"
+bumpversion = ">=0.6.0,<0.7"
+flaky = ">=3.8.1,<4"
+freezegun = ">=1.5.1,<2"
+pre-commit = ">=4.0.1,<5"
+tox = ">=4.23.2,<5"
+
+
+[tool.pixi.tasks]
+
+[tool.pixi.tasks.fmt]
+cmd = "pixi run -e ci-basics ruff format ./src && ruff check --fix ./src  && nbqa 'ruff format' src/* && yamllint -c yamllintconfig.yaml . && taplo fmt"
+description = "Format python files"
+env = { RUST_LOG = "warn" }
+
+[tool.pixi.tasks.lint]
+cmd = "ruff check ./src && yamllint -c yamllintconfig.yaml . && taplo check && pyright"
+description = "Validate formatting and type check python files"
+
+[tool.pixi.tasks.test]
+cmd = "pytest --ignore=src/local-data-stack/code_location_local-data-stack_dbt/dbt_packages src"
+description = "Validate formatting and type check python files"
+
+
+[tool.ruff]
+exclude = [
+  ".git",
+  "__pycache__",
+  "build",
+  "dist",
+  ".pixi",
+  "dbt_packages",
+  "*.ipynb",
+]
+
+line-length = 88
+
+[tool.ruff.lint]
+ignore = ["E501"]
+select = ["F", "E", "W", "C", "B", "I"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5
+
+[tool.pyright]
+include = [
+  ".",
+]
+exclude = []
+pythonVersion = "3.12"
+venvPath = ".pixi/envs"
+venv = "dev"
+extraPaths = []
+
+reportMissingTypeStubs = false
+reportImportCycles = "error"
+useLibraryCodeForTypes = true
+typeCheckingMode = "standard"
+
+[tool.taplo]
+exclude = []
+
+
+[tool.pytest]
+filterwarnings = [
+    "ignore:.*'soft_unicode' has been renamed to 'soft_str'*:DeprecationWarning",
+    "ignore:unclosed file .*:ResourceWarning"
+]
+testpaths = [
+    "tests/functional",
+    "tests/unit"
+]
+markers = [
+    "skip_profile(profile)"
+]
